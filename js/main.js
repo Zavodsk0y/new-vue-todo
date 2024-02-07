@@ -1,28 +1,3 @@
-// Vue.component('columns', {
-//     props: ['cards'],
-//     template: `
-//
-//     `,
-//     methods: {
-//         addCard(name) {
-//             let card = {name: name, tasks: []}
-//             this.cards.push(card)
-//             this.name = ""
-//             console.log(this.cards)
-//         },
-//         addTaskToCard(card) {
-//             console.log(Object.values(this.cards[0].tasks))
-//         }
-//     },
-//     data() {
-//         return {
-//             name: null,
-//             taskName: null,
-//         }
-//     }
-// })
-
-
 new Vue({
     el: "#todo-container",
     data: {
@@ -50,11 +25,21 @@ new Vue({
             this.firstColumnCards[cardIndex].taskName = ''
             console.log(this.firstColumnCards[cardIndex].tasks)
         },
-        completeTask(card, taskIndex) {
+        completeTask(card, taskIndex, cardIndex) {
             console.log(card)
+            console.log(cardIndex)
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
+            if (this.isCardHalfCompleted(card)) this.moveCardToInProgress(cardIndex)
         },
-
+        moveCardToInProgress(cardIndex) {
+            this.secondColumnCards.push(this.firstColumnCards[cardIndex])
+            this.firstColumnCards.splice(cardIndex, 1)
+        },
+        isCardHalfCompleted(card) {
+            let tasks = card.tasks
+            let completedTasks = tasks.filter(task => task.completed)
+            return completedTasks.length / tasks.length >= 0.5
+        }
 
     }
 })
