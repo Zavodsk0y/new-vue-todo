@@ -11,7 +11,28 @@
 <body>
 
 <div id="todo-container">
-<columns :cards="cards"></columns>
+    <div class="columns">
+        <div class="column">
+            <h2 class="t-a-c">Бэклог</h2>
+            <label for="cardName"></label>
+            <input type="text" v-model="cardName" placeholder="Название карточки" id="cardName">
+            <button v-on:click="addCard()">Добавить карточку</button>
+            <div v-for="(card, index) in this.firstColumnCards">
+                <h2>{{card.name}}</h2>
+                <li v-for="(task, taskIndex) in card.tasks" :key="taskIndex">
+                    {{ task.taskName }}
+                </li>
+                <input type="text" v-model="taskName">
+                <button v-on:click="addTask(index)">+</button>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="t-a-c">В работе</h2>
+        </div>
+        <div class="column">
+            <h2 class="t-a-c">Готово</h2>
+        </div>
+    </div>
 </div>
 </body>
 </html>
