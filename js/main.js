@@ -37,7 +37,7 @@ new Vue({
     methods: {
         addCard() {
             if (this.firstColumnQuantity < 3) {
-                let card = {name: this.cardName, tasks: []}
+                let card = {name: this.cardName, tasks: [], taskName: ''}
                 this.firstColumnCards.push(card)
                 this.firstColumnQuantity += 1
                 console.log(this.firstColumnCards)
@@ -45,13 +45,15 @@ new Vue({
         },
         addTask(cardIndex) {
             console.log(cardIndex)
-            let task = {taskName: this.taskName, completed: false}
+            let task = {taskName: this.firstColumnCards[cardIndex].taskName, completed: false}
             this.firstColumnCards[cardIndex].tasks.push(task)
+            this.firstColumnCards[cardIndex].taskName = ''
             console.log(this.firstColumnCards[cardIndex].tasks)
         },
         completeTask(card, taskIndex) {
+            console.log(card)
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
-        }
+        },
 
 
     }

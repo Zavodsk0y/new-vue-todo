@@ -20,9 +20,9 @@
             <div v-for="(card, index) in this.firstColumnCards">
                 <h2>{{card.name}}</h2>
                 <li v-for="(task, taskIndex) in card.tasks" :key="taskIndex">
-                    {{ task.taskName }}
+                    <p v-on:click="completeTask(card, taskIndex)">{{ task.taskName }}</p>
                 </li>
-                <input type="text" v-model="taskName">
+                <input type="text" v-model="card.taskName">
                 <button v-on:click="addTask(index)">+</button>
             </div>
         </div>
