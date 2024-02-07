@@ -15,12 +15,14 @@ new Vue({
                 let card = {name: this.cardName, tasks: [], taskName: ''}
                 this.firstColumnCards.push(card)
                 this.firstColumnQuantity += 1
+                this.saveDataToLocalStorage()
             }
         },
         addTask(cardIndex) {
             let task = {taskName: this.firstColumnCards[cardIndex].taskName, completed: false}
             this.firstColumnCards[cardIndex].tasks.push(task)
             this.firstColumnCards[cardIndex].taskName = ''
+            this.saveDataToLocalStorage()
         },
         completeTask(card, taskIndex, cardIndex) {
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
@@ -28,16 +30,19 @@ new Vue({
             if (this.isCardCompleted(card)) {
                 this.moveCardToDone(cardIndex)
             }
+            this.saveDataToLocalStorage()
         },
         moveCardToInProgress(cardIndex) {
             console.log(cardIndex)
             this.secondColumnCards.push(this.firstColumnCards[cardIndex])
-            this.firstColumnCards.splice(cardIndex, 1)
+            Vue.delete(this.firstColumnCards, cardIndex)
+            this.saveDataToLocalStorage()
         },
         moveCardToDone(cardIndex) {
             console.log(cardIndex)
             this.thirdColumnCards.push(this.secondColumnCards[cardIndex])
-            this.secondColumnCards.splice(cardIndex, 1)
+            Vue.delete(this.secondColumnCards, cardIndex)
+            this.saveDataToLocalStorage()
         },
         isCardHalfCompleted(card) {
             let tasks = card.tasks
@@ -48,7 +53,20 @@ new Vue({
             let tasks = card.tasks
             let completedTasks = tasks.filter(task => task.completed)
             return completedTasks.length / tasks.length >= 1
-        }
-
+        },
+        saveDataToLocalStorage() {
+            const dataToStore = {
+                firstColumnCards: this.firstColumnCards,
+                secondColumnCards: this.secondColumnCards,
+                thirdColumnCards: this.thirdColumnCards
+            }
+            localStorage.setItem('todoAppData', JSON.stringify(dataToStore))
+        },
+    },
+    mounted() {
+        const storedData = JSON.parse(localStorage.getItem('todoAppData'))
+        this.firstColumnCards = storedData.firstColumnCards
+        this.secondColumnCards = storedData.secondColumnCards
+        this.thirdColumnCards = storedData.thirdColumnCards
     }
 })
