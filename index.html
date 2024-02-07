@@ -37,6 +37,12 @@
         </div>
         <div class="column">
             <h2 class="t-a-c">Готово</h2>
+            <div v-for="(card, index) in this.thirdColumnCards">
+                <h2>{{card.name}}</h2>
+                <li v-for="(task, taskIndex) in card.tasks" :key="taskIndex">
+                    <span v-on:click="completeTask(card, taskIndex)" :class="{'completed' : task.completed }">{{ task.taskName }}</span>
+                </li>
+            </div>
         </div>
     </div>
 </div>

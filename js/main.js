@@ -30,15 +30,28 @@ new Vue({
             console.log(cardIndex)
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
             if (this.isCardHalfCompleted(card)) this.moveCardToInProgress(cardIndex)
+            if (this.isCardCompleted(card)) {
+                alert('pizda')
+                this.moveCardToDone(cardIndex)
+            }
         },
         moveCardToInProgress(cardIndex) {
             this.secondColumnCards.push(this.firstColumnCards[cardIndex])
             this.firstColumnCards.splice(cardIndex, 1)
         },
+        moveCardToDone(cardIndex) {
+            this.thirdColumnCards.push(this.secondColumnCards[cardIndex])
+            this.secondColumnCards.splice(cardIndex, 1)
+        },
         isCardHalfCompleted(card) {
             let tasks = card.tasks
             let completedTasks = tasks.filter(task => task.completed)
             return completedTasks.length / tasks.length >= 0.5
+        },
+        isCardCompleted(card) {
+            let tasks = card.tasks
+            let completedTasks = tasks.filter(task => task.completed)
+            return completedTasks.length / tasks.length >= 1
         }
 
     }
