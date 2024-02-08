@@ -20,18 +20,22 @@ new Vue({
             }
         },
         addTask(cardIndex) {
-            let task = {taskName: this.firstColumnCards[cardIndex].taskName, completed: false}
-            this.firstColumnCards[cardIndex].tasks.push(task)
-            this.firstColumnCards[cardIndex].taskName = ''
-            this.saveDataToLocalStorage()
+            if (!this.isFirstColumnBlocked) {
+                let task = {taskName: this.firstColumnCards[cardIndex].taskName, completed: false}
+                this.firstColumnCards[cardIndex].tasks.push(task)
+                this.firstColumnCards[cardIndex].taskName = ''
+                this.saveDataToLocalStorage()
+            }
         },
         completeTask(card, taskIndex, cardIndex) {
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
-
-            if (this.isCardHalfCompleted(card) && this.secondColumnQuantity < 5) this.moveCardToInProgress(cardIndex)
             if (this.isCardCompleted(card)) {
                 this.moveCardToDone(cardIndex)
             }
+
+            if(!this.isFirstColumnBlocked) card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
+
+            if (this.isCardHalfCompleted(card) && this.secondColumnQuantity < 5 && !this.isFirstColumnBlocked) this.moveCardToInProgress(cardIndex)
             this.saveDataToLocalStorage()
         },
         moveCardToInProgress(cardIndex) {
@@ -45,6 +49,7 @@ new Vue({
         moveCardToDone(cardIndex) {
             console.log(cardIndex)
             this.thirdColumnCards.push(this.secondColumnCards[cardIndex])
+            if (this.secondColumnQuantity === 5) this.isFirstColumnBlocked = false
             Vue.delete(this.secondColumnCards, cardIndex)
             this.secondColumnQuantity -= 1
             this.saveDataToLocalStorage()
