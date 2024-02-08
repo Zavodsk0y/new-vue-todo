@@ -29,13 +29,17 @@ new Vue({
         },
         completeTask(card, taskIndex, cardIndex) {
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
+            this.checkColumnStatus()
+
+            if (this.isCardHalfCompleted(card) && this.secondColumnQuantity < 5 && !this.isFirstColumnBlocked) {
+                this.checkColumnStatus()
+                this.moveCardToInProgress(cardIndex)
+            }
+
             if (this.isCardCompleted(card)) {
                 this.moveCardToDone(cardIndex)
             }
 
-            if(!this.isFirstColumnBlocked) card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
-
-            if (this.isCardHalfCompleted(card) && this.secondColumnQuantity < 5 && !this.isFirstColumnBlocked) this.moveCardToInProgress(cardIndex)
             this.saveDataToLocalStorage()
         },
         moveCardToInProgress(cardIndex) {
@@ -44,6 +48,7 @@ new Vue({
             Vue.delete(this.firstColumnCards, cardIndex)
             this.firstColumnQuantity -= 1
             this.secondColumnQuantity += 1
+            this.checkColumnStatus()
             this.saveDataToLocalStorage()
         },
         moveCardToDone(cardIndex) {
@@ -52,6 +57,7 @@ new Vue({
             if (this.secondColumnQuantity === 5) this.isFirstColumnBlocked = false
             Vue.delete(this.secondColumnCards, cardIndex)
             this.secondColumnQuantity -= 1
+            this.checkColumnStatus()
             this.saveDataToLocalStorage()
         },
         isCardHalfCompleted(card) {
@@ -75,6 +81,17 @@ new Vue({
             }
             localStorage.setItem('todoAppData', JSON.stringify(dataToStore))
         },
+        checkColumnStatus() {
+            if (this.secondColumnQuantity === 5) {
+                let halfCompletedCards = this.firstColumnCards.filter(card => this.isCardHalfCompleted(card))
+                console.log(halfCompletedCards.length)
+                if (halfCompletedCards.length > 0) {
+                    this.isFirstColumnBlocked = true
+                } else {
+                    this.isFirstColumnBlocked = false
+                }
+            }
+        }
 
     },
     mounted() {
