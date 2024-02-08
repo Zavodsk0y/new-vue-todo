@@ -12,7 +12,7 @@ new Vue({
     },
     methods: {
         addCard() {
-            if (this.firstColumnQuantity < 3) {
+            if (this.firstColumnQuantity < 3 && !this.isFirstColumnBlocked) {
                 let card = {name: this.cardName, tasks: [], taskName: ''}
                 this.firstColumnCards.push(card)
                 this.firstColumnQuantity += 1
@@ -27,6 +27,7 @@ new Vue({
         },
         completeTask(card, taskIndex, cardIndex) {
             card.tasks[taskIndex].completed = !card.tasks[taskIndex].completed
+
             if (this.isCardHalfCompleted(card) && this.secondColumnQuantity < 5) this.moveCardToInProgress(cardIndex)
             if (this.isCardCompleted(card)) {
                 this.moveCardToDone(cardIndex)
@@ -62,7 +63,10 @@ new Vue({
             const dataToStore = {
                 firstColumnCards: this.firstColumnCards,
                 secondColumnCards: this.secondColumnCards,
-                thirdColumnCards: this.thirdColumnCards
+                thirdColumnCards: this.thirdColumnCards,
+                firstColumnQuantity: this.firstColumnQuantity,
+                secondColumnQuantity: this.secondColumnQuantity,
+                isFirstColumnBlocked: this.isFirstColumnBlocked
             }
             localStorage.setItem('todoAppData', JSON.stringify(dataToStore))
         },
@@ -73,5 +77,8 @@ new Vue({
         this.firstColumnCards = storedData.firstColumnCards
         this.secondColumnCards = storedData.secondColumnCards
         this.thirdColumnCards = storedData.thirdColumnCards
+        this.firstColumnQuantity = storedData.firstColumnQuantity
+        this.secondColumnQuantity = storedData.secondColumnQuantity
+        this.isFirstColumnBlocked = storedData.isFirstColumnBlocked
     }
 })

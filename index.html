@@ -16,14 +16,14 @@
             <h2 class="t-a-c">Бэклог</h2>
             <label for="cardName"></label>
             <input type="text" v-model="cardName" placeholder="Название карточки" id="cardName">
-            <button v-on:click="addCard()">Добавить карточку</button>
+            <button :disabled="isFirstColumnBlocked" v-on:click="addCard()">Добавить карточку</button>
             <div v-for="(card, index) in this.firstColumnCards">
                 <h2>{{card.name}}</h2>
                 <li v-for="(task, taskIndex) in card.tasks" :key="taskIndex">
                     <span v-on:click="completeTask(card, taskIndex, index)" :class="{'completed' : task.completed }">{{ task.taskName }}</span>
                 </li>
                 <input type="text" v-model="card.taskName">
-                <button v-on:click="addTask(index)">+</button>
+                <button :disabled="isFirstColumnBlocked" v-on:click="addTask(index)">+</button>
             </div>
         </div>
         <div class="column">
