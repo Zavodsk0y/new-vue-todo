@@ -9,7 +9,8 @@ new Vue({
         secondColumnQuantity: 0,
         taskName: '',
         isFirstColumnBlocked: false,
-        date: Date.now()
+        date: Date.now(),
+        editing: false
     },
     methods: {
         addCard() {
@@ -51,6 +52,18 @@ new Vue({
             this.secondColumnQuantity += 1
             this.checkColumnStatus()
             this.saveDataToLocalStorage()
+        },
+        enableEditing(card, taskIndex, cardIndex) {
+            this.taskName = this.firstColumnCards[cardIndex].tasks[taskIndex]
+            this.editing = true
+        },
+        disableEditing() {
+            this.taskName = null
+            this.editing = false
+        },
+        saveEdit(card, taskIndex, cardIndex) {
+            this.firstColumnCards[cardIndex].tasks[taskIndex] = this.taskName
+            this.disableEditing()
         },
         moveCardToDone(cardIndex) {
             console.log(cardIndex)
