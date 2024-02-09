@@ -8,19 +8,20 @@ new Vue({
         firstColumnQuantity: 0,
         secondColumnQuantity: 0,
         taskName: '',
-        isFirstColumnBlocked: false
+        isFirstColumnBlocked: false,
+        date: Date.now()
     },
     methods: {
         addCard() {
             if (this.firstColumnQuantity < 3 && !this.isFirstColumnBlocked) {
-                let card = {name: this.cardName, tasks: [], taskName: ''}
+                let card = {name: this.cardName, tasks: [{taskName: 'her', completed: false},{taskName: 'her', completed: false},{taskName: 'her', completed: false}], taskName: ''}
                 this.firstColumnCards.push(card)
                 this.firstColumnQuantity += 1
                 this.saveDataToLocalStorage()
             }
         },
         addTask(cardIndex) {
-            if (!this.isFirstColumnBlocked) {
+            if (!this.isFirstColumnBlocked && this.firstColumnCards[cardIndex].tasks.length < 5) {
                 let task = {taskName: this.firstColumnCards[cardIndex].taskName, completed: false}
                 this.firstColumnCards[cardIndex].tasks.push(task)
                 this.firstColumnCards[cardIndex].taskName = ''
@@ -53,6 +54,7 @@ new Vue({
         },
         moveCardToDone(cardIndex) {
             console.log(cardIndex)
+            this.secondColumnCards[cardIndex].date = new Date().toLocaleString()
             this.thirdColumnCards.push(this.secondColumnCards[cardIndex])
             if (this.secondColumnQuantity === 5) this.isFirstColumnBlocked = false
             Vue.delete(this.secondColumnCards, cardIndex)
@@ -77,7 +79,7 @@ new Vue({
                 thirdColumnCards: this.thirdColumnCards,
                 firstColumnQuantity: this.firstColumnQuantity,
                 secondColumnQuantity: this.secondColumnQuantity,
-                isFirstColumnBlocked: this.isFirstColumnBlocked
+                isFirstColumnBlocked: this.isFirstColumnBlocked,
             }
             localStorage.setItem('todoAppData', JSON.stringify(dataToStore))
         },

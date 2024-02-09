@@ -42,6 +42,7 @@
                 <li v-for="(task, taskIndex) in card.tasks" :key="taskIndex">
                     <span :class="{'completed' : task.completed }">{{ task.taskName }}</span>
                 </li>
+                <p>Дата закрытия: {{card.date}}</p>
             </div>
         </div>
     </div>
